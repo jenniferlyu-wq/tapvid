@@ -29,6 +29,14 @@ Ask once, in the step-4 message, with the recommendation first (this pattern, in
 - Auto mode asks nothing: record public pages and products with a saved session (`login --check`); every other
   product screen is drawn as animation, and the delivery report says so.
 
+### Reusing the same product across films
+
+Before recording, check the product’s previous projects for original sessions, official assets and finished edits. Keep a company-level library outside the clone directory. Give each asset a source URL or local master, a type (public site, console session, generated presenter or previous edit), and a short description of what is actually visible. Keep the reference creator’s media out of this library.
+
+Save raw sessions separately from short, silent operation clips. Record the source filename and in/out times for every cut. Inspect the exported clip before naming it: a slot called “search” in an old edit may actually show the results screen. A pan across a screenshot remains a still-image treatment, not a recording. Prefer readable crops without browser chrome or unrelated account details.
+
+For a large public site, use its sitemap to inventory coverage and distinguish product surfaces from resource articles and translated duplicates. List exactly which pages were captured and which are indexed only. Reuse a verified clip when the new script calls for the same action; record only the missing state.
+
 ## 2. Log in once
 
 ```bash

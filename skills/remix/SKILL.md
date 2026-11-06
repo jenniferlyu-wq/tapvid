@@ -247,6 +247,8 @@ effects), and the known limits with reasons. Ask for a yes; then step 4.
 
 Read `references/replica.md`.
 
+For a returning product, inventory the company’s reusable footage before asking for files or recording again (see “Reusing the same product across films” in [capture.md](references/capture.md)).
+
 **Research first**. Before the questions, look up the topic and the user's product on the web (see "How to
 talk": official site, docs, press kit, app-store page) and write what you learn to `$PROJECT/research.md` —
 what it is, key features and numbers, audience, tone, brand colours, the official logo's URL, links to real

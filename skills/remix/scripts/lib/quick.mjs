@@ -149,7 +149,18 @@ function boardJson(scene, { narrated, captioned, canvas }) {
   };
 }
 
-function boardJsx(scene, source) {
+function boardJsx(scene, source, palette) {
+  // Boards reference Design keys even when the shot sheet supplies a literal hex colour.
+  function colorKey(value, fallback) {
+    if (!/^#(?:[a-f\d]{3,4}|[a-f\d]{6}|[a-f\d]{8})$/i.test(value)) return value || fallback;
+    const hex = value.toLowerCase();
+    const existing = Object.keys(palette).find((key) => palette[key].toLowerCase() === hex);
+    if (existing) return existing;
+    let key = 'color' + hex.slice(1);
+    while (Object.hasOwn(palette, key)) key += '_';
+    palette[key] = value;
+    return key;
+  }
   const layers = scene.layers.map((l) => ({ key: l.key, box: l.box.map(pct), shape: l.shape || 'rect',
     ...(l.fill === 'code' ? { code: true } : {}), ...(l.cutout ? { cut: `${l.key}Cutout` } : {}) }));
   const texts = (scene.texts || []).map((t) => ({
@@ -157,11 +168,11 @@ function boardJsx(scene, source) {
     in: round(Math.min(1, Math.max(0, (t.in - scene.start) / scene.duration))),
     out: round(Math.min(1, Math.max(0, (t.out - scene.start) / scene.duration))),
     enter: t.enter || 'fade',
-    color: t.color || 'fg',
+    color: colorKey(t.color, 'fg'),
     plate: Boolean(t.plate),
     lines: t.text.split('\n').length,
   }));
-  return source.replaceAll('__NAME__', scene.board).replace('__LAYOUT__', JSON.stringify({ background: scene.background || 'bg', layers, texts }));
+  return source.replaceAll('__NAME__', scene.board).replace('__LAYOUT__', JSON.stringify({ background: colorKey(scene.background, 'bg'), layers, texts }));
 }
 
 function elementsOf(scene) {
@@ -210,7 +221,8 @@ export function quickTemplate({ shots, timeline, size, id, title = id, family = 
   const narrated = (timeline.words || []).length > 0;
   const captioned = narrated && Boolean(shots.captions);
   const source = readFileSync(BOARD_SOURCE, 'utf-8');
-  const boards = Object.fromEntries(scenes.map((s) => [s.board, { jsx: boardJsx(s, source), json: boardJson(s, { narrated, captioned, canvas }) }]));
+  const palette = { ...DEFAULT_PALETTE, ...shots.palette };
+  const boards = Object.fromEntries(scenes.map((s) => [s.board, { jsx: boardJsx(s, source, palette), json: boardJson(s, { narrated, captioned, canvas }) }]));
   const transitions = scenes.slice(1).flatMap((s, i) => {
     const out = scenes[i].outShot?.transition_out;
     return out?.type === 'soft' && out.end > out.start ? [{ from: scenes[i].board, to: s.board, type: 'crossfade', duration: round(out.end - out.start) }] : [];
@@ -232,7 +244,7 @@ export function quickTemplate({ shots, timeline, size, id, title = id, family = 
       boards: scenes.map((s) => s.board),
       transitions,
     },
-    design: designJs({ palette: shots.palette, family, captions: captioned ? shots.captions : null }),
+    design: designJs({ palette, family, captions: captioned ? shots.captions : null }),
     skill: skillMd({ id, title, scenes, duration }),
     boards,
     describe: Object.fromEntries(scenes.flatMap((s) => s.layers.filter((l) => l.fill !== 'code' && l.describe).map((l) => [`${s.board}.${l.key}`, l.describe]))),

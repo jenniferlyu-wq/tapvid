@@ -147,3 +147,16 @@ test('quick.mjs writes a template that passes validate.mjs template, and never o
   await quick(dir, { skipBuild: true, force: true, log: () => {} });
   assert.equal(existsSync(join(dir, 'template', 'boards', 'Old09.json')), false);
 });
+
+test('literal shot colours survive generation without violating the board palette rule', async () => {
+  const dir = project();
+  const shots = structuredClone(SHOTS);
+  shots.scenes[0].background = '#123abc';
+  shots.scenes[0].texts[0].color = '#ffffff';
+  writeFileSync(join(dir, 'analysis/shots.json'), JSON.stringify(shots));
+  await quick(dir, { skipBuild: true, log() {} });
+  const jsx = readFileSync(join(dir, 'template/boards/Hook01.jsx'), 'utf8');
+  assert.match(jsx, /"color":"fg"/);
+  assert.doesNotMatch(jsx, /#123abc|#ffffff/i);
+  assert.match(readFileSync(join(dir, 'template/design.js'), 'utf8'), /#123abc/);
+});

@@ -192,6 +192,10 @@ Rules: one action per shot; at most two hands in frame and say what each holds; 
 in words even when an image is given; describe what to show, never "do not show the old product"; keep areas
 the board covers with text empty ("leave the left third clear").
 
+For a creator demonstrating a desktop product, stage the identity portrait at the desk before animating it. Include the screen direction, hands and input device in the starting frame. Ask for one observable action, such as pausing a scroll to read a result. Review the hand and eyeline on both sides of the cut to the real recording. If the finger lands on the trackpad, cut to scrolling or pointer selection; use a keyboard take for typing.
+
+For portrait edits, follow the active UI region in the recording. When the crop clips a necessary label, use the whole browser width in a split view with the creator in the other pane. Check the first and last frames of a scroll as well as its midpoint.
+
 **Low tier**: the reference clip is the layer's region of the original
 frame (the whole frame for a full-frame layer), with its people, burned-in captions and stickers, so the prompt
 describes the full new picture for that region and takes only the motion from the video. Pin `provider: "tapvid"`, `model: "minimax-h3"` when TapVid is ready; images are the
